@@ -1,5 +1,5 @@
 const mongooes= require('mongoose');
-mongooes.connect("mongodb://127.0.0.1:27017/mindsquare")
+mongooes.connect("mongodb+srv://shishantpandeyofficial:o0MnTa8HfmwtrZvi@mycluster.7tjuw.mongodb.net/")
 const userSchema = mongooes.Schema({
     username: String,
     email: String,
