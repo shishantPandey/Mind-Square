@@ -101,7 +101,6 @@ app.post('/login',async(req,res)=>{
  bcrypt.compare(password,user.password,function(err,result){
     if(result){
 if (user.password=="$2b$10$GBrfz38TebJSD25eiv.Tfewd53ZOqg40RRwxQXqJL0ChFCFv71Eie") {
-    console.log("admin login")
     let token =  jwt.sign({email: email, username: user.username},"shhhh")
 // Setting a cookie that persists for 7 days
 res.cookie("token", token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
@@ -124,6 +123,47 @@ app.get("/logout", (req,res)=>{
     res.clearCookie("token")
     res.redirect("/")
 })
+app.get('/users', async (req, res) => {
+    try {
+        const users = await userModels.find({});
+        res.render('users', { users }); // Pass users data to the EJS template
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred");
+    }
+});
+app.get('/user/:id', async (req, res) => {
+    try {
+        const user = await userModels.findById(req.params.id);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.render('userDetails', { user }); // Render user details page
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+});
+app.post('/user/:id/update-fees', async (req, res) => {
+    const { monthlyFees } = req.body;
+    try {
+        await userModels.findByIdAndUpdate(req.params.id, { monthlyFees });
+        res.redirect(`/user/${req.params.id}`); // Redirect back to the user details page
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+});
+app.get('/users/delete/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        await userModels.findByIdAndDelete(userId); // Delete user by ID
+        res.redirect('/users'); // Redirect back to users list after deletion
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).send("Error deleting user");
+    }
+});
+
 function isLoggedIn(req,res,next){
     const token = req.cookies.token;
   if (!token) {
@@ -135,4 +175,5 @@ function isLoggedIn(req,res,next){
     }
     next();
 }
+
 app.listen(3000)

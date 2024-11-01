@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">User Details</h1>
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold">Username: <%= user.username %></h2>
+            <p>Email: <%= user.email %></p>
+            <h3 class="mt-4 text-lg font-semibold">Monthly Fees:</h3>
+            <form action="/user/<%= user._id %>/update-fees" method="POST" class="mt-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <% const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; %>
+                    <% months.forEach(month => { %>
+                        <div class="flex items-center">
+                            <label class="w-1/2 text-gray-700"><%= month %>:</label>
+                            <div class="w-1/2">
+                                <span class="fee-amount"><%= user.monthlyFees[month] %></span>
+                                <input type="number" name="monthlyFees[<%= month %>]" value="<%= user.monthlyFees[month] %>" class="p-2 border rounded hidden fee-input" />
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+                <button type="submit" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hidden submit-btn">Update Fees</button>
+                <div class="flex justify-end">
+                    <i class="fas fa-pencil-alt cursor-pointer text-blue-500 mt-4" onclick="toggleEdit()"></i>
+                </div>
+            </form>
+            <a href="/users" class="text-blue-600 hover:underline mt-4 inline-block">Back to Users List</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleEdit() {
+            const feeInputs = document.querySelectorAll('.fee-input');
+            const feeAmounts = document.querySelectorAll('.fee-amount');
+            const submitBtn = document.querySelector('.submit-btn');
+
+            feeInputs.forEach(input => input.classList.toggle('hidden'));
+            feeAmounts.forEach(amount => amount.classList.toggle('hidden'));
+            submitBtn.classList.toggle('hidden');
+
+            // Optional: Focus the first input field when editing starts
+            if (!feeInputs[0].classList.contains('hidden')) {
+                feeInputs[0].focus();
+            }
+        }
+    </script>
+</body>
+</html>
