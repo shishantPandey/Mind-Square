@@ -138,7 +138,7 @@ app.get('/user/:id', async (req, res) => {
         if (!user) {
             return res.status(404).send('User not found');
         }
-        res.render('userDetails', { user }); // Render user details page
+        res.render('userdetails', { user }); // Render user details page
     } catch (error) {
         res.status(500).send('Server error');
     }
