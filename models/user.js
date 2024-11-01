@@ -19,4 +19,4 @@ const userSchema = mongooes.Schema({
         December: { type: Number, default: 0 },
     },
 })
-module.exports = mongooes.model('user',userSchema);
+module.exports = mongooes.model('user',userchema);
