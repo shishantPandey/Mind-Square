@@ -4,6 +4,7 @@ const userSchema = mongooes.Schema({
     username: String,
     email: String,
     password: String,
+    Class: Number,
     monthlyFees: {
         January: { type: Number, default: 0 },
         February: { type: Number, default: 0 },

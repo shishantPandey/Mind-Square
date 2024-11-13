@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+
+    <!-- Search Box -->
+    <div class="mb-6">
+        <input type="text" id="search" placeholder="Search users by name..." class="w-full p-4 rounded-lg text-black" autocomplete="off">
+    </div>
+
+    <!-- Search Results -->
+    <div id="search-results">
+        <!-- Results will be shown here -->
+    </div>
+
+    <script>
+        // Capture the search input and send request to server using pure JavaScript
+        document.getElementById('search').addEventListener('input', function() {
+            const searchTerm = this.value.trim();
+
+            if (searchTerm.length > 0) {
+                // Send an AJAX request using fetch API
+                fetch(`/search/results?search=${encodeURIComponent(searchTerm)}`)
+                    .then(response => response.text()) // Get the HTML string
+                    .then(data => {
+                        document.getElementById('search-results').innerHTML = data;
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                    });
+            } else {
+                // If the input is empty, clear the results
+                document.getElementById('search-results').innerHTML = '';
+            }
+        });
+    </script>
+
+</body>
+</html>

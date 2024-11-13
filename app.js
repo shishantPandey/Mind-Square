@@ -75,7 +75,9 @@ app.post("/upload" ,upload.single('file'), (req,res)=>{
 
 app.post("/register", async(req,res) => {
 
- let {email,password,username} = req.body;
+
+ let {email,password,username,Class} = req.body;
+ console.log(req.body)
  let user  = await userModels.findOne({email});
  if(user) return res.status(500).send("user already  registered");
 bcrypt.genSalt(10,(err,salt)=>{
@@ -83,6 +85,7 @@ bcrypt.genSalt(10,(err,salt)=>{
       let user = await  userModels.create({
             username,
             email,
+            Class,
             password: hash
         });
        let token =  jwt.sign({email: email, username: username},"shhhh")
@@ -123,6 +126,54 @@ app.get("/logout", (req,res)=>{
     res.clearCookie("token")
     res.redirect("/")
 })
+app.get('/search', (req, res) => {
+    // Just render the search form, no need to fetch users here
+    res.render('search', { users: [] }); // Pass an empty array or leave users undefined for now
+});
+// Route for handling the search query
+// Route for handling real-time search queries
+app.get('/search/results', async (req, res) => {
+    const query = req.query.search ? req.query.search.toLowerCase() : '';
+    let users = [];
+
+    // Perform a case-insensitive search in your database if query exists
+    if (query) {
+        users = await userModels.find({
+            username: { $regex: query, $options: 'i' } // Case-insensitive search
+        });
+    }
+
+    // Render the results dynamically
+    let resultsHtml = '';
+
+    if (users.length > 0) {
+        users.forEach(user => {
+            resultsHtml += `
+                <div class="p-4 mb-4 border rounded-lg shadow-lg bg-white">
+                    <a href="/user/${user._id}" class="text-blue-600 hover:underline">
+                        ${user.username}
+                    </a>
+                    <div>
+                        <p>${user.email}</p>
+                    </div>
+                    <div>
+            <!-- Make sure this URL is correct, and it points to your delete route -->
+            <a href="/delete/${user._id}" class="text-red-600 hover:underline" onclick="return confirm('Are you sure you want to delete this user?')">
+                Delete
+            </a>
+        </div>
+                </div>
+            `;
+        });
+    } else {
+        resultsHtml = '<p>No users found</p>';
+    }
+
+    // Return the results as HTML
+    res.send(resultsHtml);
+});
+
+
 app.get('/users', async (req, res) => {
     try {
         const users = await userModels.find({});
@@ -175,5 +226,24 @@ function isLoggedIn(req,res,next){
     }
     next();
 }
+// Route to handle user deletion
+app.get('/delete/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        // Find the user by ID and remove from the database
+        const deletedUser = await userModels.findByIdAndDelete(userId);
+
+        // After deletion, redirect back to the search results page or users list
+        if (deletedUser) {
+            res.redirect('/search'); // or wherever you want to redirect after deletion
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error deleting user');
+    }
+});
 
 app.listen(3000)

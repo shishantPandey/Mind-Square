@@ -3,18 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="Mind Square - A platform dedicated to personalized learning experiences.">
+    <meta name="keywords" content="Learning, Education, Personalized Attention, Progress Tracking">
+    <title>Mind Square</title>
+    <style>
+      .mainforloader {
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+      }
+
+      .preloader {
+        display: flex;
+        height: 100%;
+        background: #eee;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .dash {
+        margin: 0 15px;
+        width: 35px;
+        height: 15px;
+        border-radius: 8px;
+        background: #ff2cbd;
+      }
+
+      .uno {
+        margin-right: -18px;
+        transform-origin: center left;
+        animation: spin 3s linear infinite;
+      }
+
+      .dos {
+        transform-origin: center right;
+        animation: spin2 3s linear infinite;
+        animation-delay: 0.2s;
+      }
+
+      .tres {
+        transform-origin: center right;
+        animation: spin3 3s linear infinite;
+        animation-delay: 0.3s;
+      }
+
+      .cuatro {
+        transform-origin: center right;
+        animation: spin4 3s linear infinite;
+        animation-delay: 0.4s;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(360deg);
+        }
+        30% {
+          transform: rotate(370deg);
+        }
+        35% {
+          transform: rotate(360deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .preloader::before {
+        content: "LOADING";
+        color: white;
+        font-size: 3rem;
+        position: absolute;
+        top: 55%;
+        text-align: center;
+      }
+      @keyframes spin2 {
+        0% {
+          transform: rotate(0deg);
+        }
+        20% {
+          transform: rotate(0deg);
+        }
+        30% {
+          transform: rotate(-180deg);
+        }
+        35% {
+          transform: rotate(-190deg);
+        }
+        40% {
+          transform: rotate(-180deg);
+        }
+        78% {
+          transform: rotate(-180deg);
+        }
+        95% {
+          transform: rotate(-360deg);
+        }
+        98% {
+          transform: rotate(-370deg);
+        }
+        100% {
+          transform: rotate(-360deg);
+        }
+      }
+
+      @keyframes spin3 {
+        0% {
+          transform: rotate(0deg);
+        }
+        27% {
+          transform: rotate(0deg);
+        }
+        40% {
+          transform: rotate(180deg);
+        }
+        45% {
+          transform: rotate(190deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        62% {
+          transform: rotate(180deg);
+        }
+        75% {
+          transform: rotate(360deg);
+        }
+        80% {
+          transform: rotate(370deg);
+        }
+        85% {
+          transform: rotate(360deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin4 {
+        0% {
+          transform: rotate(0deg);
+        }
+        38% {
+          transform: rotate(0deg);
+        }
+        60% {
+          transform: rotate(-360deg);
+        }
+        65% {
+          transform: rotate(-370deg);
+        }
+        75% {
+          transform: rotate(-360deg);
+        }
+        100% {
+          transform: rotate(-360deg);
+        }
+        
+      }
+      html body .hole-website-wrapper {
+  display: none;
+}
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.onload = () => {
+      let holewebsitewrapper = document.querySelector(".hole-website-wrapper");
+      let mbl = document.querySelector(".mainforloader");
+      holewebsitewrapper.style.display = "block";
+      mbl.style.display = "none";
+    };
+    </script>
 </head>
 <body>
-<!-- credit: https://github.com/codebushi/gatsby-starter-lander -->
-
-<div>  
+  <div class="mainforloader">
+    <div class="preloader">
+      <div class="dash uno"></div>
+      <div class="dash dos"></div>
+      <div class="dash tres"></div>
+      <div class="dash cuatro"></div>
+    </div>
+  </div>
+<div class="hole-website-wrapper">  
     <header class="sticky top-0 bg-white shadow">
         <div class="container flex flex-col sm:flex-row justify-between items-center mx-auto py-4 px-8">
             <div class="flex items-center text-2xl">
                 <div class="w-12 mr-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                    <svg   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                         <path fill="#BEE3F8" d="M44,7L4,23l40,16l-7-16L44,7z M36,23H17l18-7l1,6V23z"></path>
                         <path fill="#3182CE"
                             d="M40.212,10.669l-5.044,11.529L34.817,23l0.351,0.802l5.044,11.529L9.385,23L40.212,10.669 M44,7L4,23 l40,16l-7-16L44,7L44,7z">
@@ -36,7 +213,12 @@
                   <% } else { %>
                     <a class="px-4" href="#Location">Location</a>
                   <% } %>
-                <a class="px-4" href="#contact">Contact Us</a>
+                  <% if (typeof user !== 'undefined' && user.username=="admin") { %>
+                    <a class="px-4" href="/search">Search</a>
+                  <% } else { %>
+                    <a class="px-4" href="#Location">Contact Us</a>
+                  <% } %>
+               
             </div>
             <div class="">
              <!-- <a href="register.ejs"> 
@@ -92,7 +274,7 @@
 </section>
 <br> <br><br>
 <!-- Features Section -->
-<section id="Features" class="bg-gray-100 py-12">
+<section  id="Features" class="bg-gray-100 py-12">
     <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
       <div class="text-center mb-8">
         <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800">Why Choose Us?</h2>
@@ -214,7 +396,7 @@
   
       <!-- Map Container -->
       <div class="relative overflow-hidden rounded-lg shadow-lg">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3599.8451202179967!2d84.66432987674331!3d25.54353548934205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398d5f0041376b1f%3A0x606db2f615d79916!2smind%20square!5e0!3m2!1sen!2sin!4v1730448194667!5m2!1sen!2sin"    width="100%"
+        <iframe loading="lazy" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3599.8451202179967!2d84.66432987674331!3d25.54353548934205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398d5f0041376b1f%3A0x606db2f615d79916!2smind%20square!5e0!3m2!1sen!2sin!4v1730448194667!5m2!1sen!2sin"    width="100%" 
         height="100%"
         style="border:0;"
         allowfullscreen=""
@@ -225,8 +407,14 @@
       </div>
     </div>
   </section>
-      
-
 </div>
+<script>
+  window.onload = () => {
+      let holewebsitewrapper = document.querySelector(".hole-website-wrapper");
+      let mbl = document.querySelector(".mainforloader");
+      holewebsitewrapper.style.display = "block";
+      mbl.style.display = "none";
+  };
+</script>
 </body>
 </html>
